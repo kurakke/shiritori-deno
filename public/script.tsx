@@ -58,8 +58,14 @@ function App() {
     const previousWord = await response.text();
     console.log(previousWord);
     console.log(JSON.parse(previousWord));
-    console.log(previousWord + "f-yahharo1");
-    console.log("f-yahharo");
+
+    console.log(JSON.parse(previousWord).length);
+    console.log(Math.floor(Math.random() * JSON.parse(previousWord).length));
+    console.log(
+      JSON.parse(previousWord)[
+        Math.floor(Math.random() * JSON.parse(previousWord).length)
+      ].name
+    );
   };
   return (
     <div>
