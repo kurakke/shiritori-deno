@@ -12,27 +12,34 @@ function App() {
   const [firstWordData, setFirstWordData] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
 
-  useStateEffect(() => {
-    const dataReq = async () => {
-      const response = await fetch("http://localhost:8000/shiritori");
-      const previousWord = await response.json();
-      setPrevWord(previousWord);
-    };
-    dataReq();
-  }, []);
+  // useStateEffect(() => {
+  //   const dataReq = async () => {
+  //     const response = await fetch("http://localhost:8000/shiritori");
+  //     const previousWord = await response.json();
+  //     setPrevWord(previousWord);
+  //   };
+  //   dataReq();
+  // }, []);
+  const checkGameEnd = (word: string) => {
+    if (word[word.length - 1] === "ン") {
+      return true;
+    } else {
+      false;
+    }
+  };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
 
     setFirstWordData(JSON.stringify(firstWord));
   };
-  const gameEndCheck = (checkText: string) => {
-    if (checkText[checkText.length - 1] === "ン") {
-      console.log("yahharo");
-    }
-  };
 
   const wordCheck = (word: string) => {
+    wordList.map((items) => {
+      if (items.Word === word) {
+        alert("既に使用しています");
+      }
+    });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
       reqData(word);
     } else {
@@ -56,12 +63,22 @@ function App() {
     }
 
     const previousWord = await response.text();
-    console.log(previousWord);
-    console.log(JSON.parse(previousWord));
 
-    console.log(JSON.parse(previousWord).length);
-    console.log(Math.floor(Math.random() * JSON.parse(previousWord).length));
     console.log(
+      JSON.parse(previousWord)[
+        Math.floor(Math.random() * JSON.parse(previousWord).length)
+      ].name
+    );
+    const sentData =
+      JSON.parse(previousWord)[
+        Math.floor(Math.random() * JSON.parse(previousWord).length)
+      ];
+    setWordList((prev) => [...prev, { Word: sentData.name, isUser: false }]);
+    console.log(wordList);
+    if (checkGameEnd(sentData.name)) {
+      alert("ゲーム終了");
+    }
+    setPrevWord(
       JSON.parse(previousWord)[
         Math.floor(Math.random() * JSON.parse(previousWord).length)
       ].name
@@ -84,8 +101,12 @@ function App() {
       ></input>
       <button
         onClick={() => {
-          wordCheck(sendText);
           setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
+          if (checkGameEnd(sendText)) {
+            alert("ゲーム終了");
+          } else {
+            wordCheck(sendText);
+          }
         }}
       >
         送信
