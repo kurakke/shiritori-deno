@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.138.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.138.0/http/file_server.ts";
 import { pokemons } from "./pokemon.tsx";
 let previousWord = "しりとり";
-const firstPokemonData = pokemons[Math.floor(Math.random() * pokemons.length)];
+
 let yahharo = "やっはろ";
 const ngChars = ["ン", "X", "Y"];
 console.log("Listening on http://localhost:8000");
@@ -39,6 +39,8 @@ serve(async (req) => {
     });
   }
   if (req.method === "GET" && pathname === "/firstData") {
+    const firstPokemonData =
+      pokemons[Math.floor(Math.random() * pokemons.length)];
     console.log("in firstData");
     console.log(firstPokemonData);
     return new Response(JSON.stringify(firstPokemonData), {

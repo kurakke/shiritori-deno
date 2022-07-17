@@ -41,7 +41,7 @@ function App() {
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
-    setPrevWord(JSON.stringify(firstWord.name));
+    setPrevWord(firstWord.name);
   };
 
   const wordCheck = (word: string) => {
@@ -89,7 +89,6 @@ function App() {
       prevword[prevword.length - 1] !== usersword[0] ||
       usersword[usersword.length - 1] === "ン"
     ) {
-      console.log(wordList);
       alert("ゲーム終了");
 
       return true;
