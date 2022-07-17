@@ -19,49 +19,12 @@ function App() {
   //   };
   //   dataReq();
   // }, []);
-  const checkGameEnd = (word: string) => {
-    if (word[word.length - 1] === "ン") {
-      return true;
-    } else {
-      false;
-    }
-  };
-  const isShiritorirWord = (data: string) => {
-    if (data[data.length - 1] === "ン") {
-      return false;
-    } else {
-      wordList.map((items) => {
-        if (items.Word === data) {
-          return false;
-        }
-      });
-    }
-    return true;
-  };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
   };
 
-  const wordCheck = (word: string) => {
-    wordList.map((items) => {
-      if (items.Word === word) {
-        alert("既に使用しています");
-        return false;
-      }
-    });
-    if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-      reqData(word);
-    } else {
-      alert("入力はカタカナです");
-    }
-  };
-  const hiraToKana = (str: string): string => {
-    return str.replace(/[\u3041-\u3096]/g, (ch) =>
-      String.fromCharCode(ch.charCodeAt(0) + 0x60)
-    );
-  };
   const reqData = async (word: string) => {
     const response = await fetch("http://localhost:8000/word", {
       method: "POST",
@@ -72,7 +35,6 @@ function App() {
       alert(await response.text());
       return;
     }
-
     const previousWord = await response.text();
     const sentData =
       JSON.parse(previousWord)[
@@ -84,6 +46,12 @@ function App() {
     }
     setPrevWord(sentData.name);
   };
+
+  const hiraToKana = (str: string): string => {
+    return str.replace(/[\u3041-\u3096]/g, (ch) =>
+      String.fromCharCode(ch.charCodeAt(0) + 0x60)
+    );
+  };
   const usersGameEnd = (prevword: string, usersword: string) => {
     if (
       prevword[prevword.length - 1] !== usersword[0] ||
@@ -94,6 +62,26 @@ function App() {
       return true;
     } else {
       return false;
+    }
+  };
+  const checkGameEnd = (word: string) => {
+    if (word[word.length - 1] === "ン") {
+      return true;
+    } else {
+      false;
+    }
+  };
+  const wordCheck = (word: string) => {
+    wordList.map((items) => {
+      if (items.Word === word) {
+        alert("既に使用しています");
+        return false;
+      }
+    });
+    if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
+      reqData(word);
+    } else {
+      alert("入力はカタカナです");
     }
   };
   return (
