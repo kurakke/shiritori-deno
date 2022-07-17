@@ -9,7 +9,6 @@ type keepWord = {
 function App() {
   const [sendText, setSendText] = useState<string>("");
   const [prevWord, setPrevWord] = useState<string>("");
-  const [firstWordData, setFirstWordData] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
 
   // useStateEffect(() => {
@@ -42,8 +41,7 @@ function App() {
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
-
-    setFirstWordData(JSON.stringify(firstWord));
+    setPrevWord(JSON.stringify(firstWord.name));
   };
 
   const wordCheck = (word: string) => {
@@ -86,6 +84,19 @@ function App() {
     }
     setPrevWord(sentData.name);
   };
+  const usersGameEnd = (prevword: string, usersword: string) => {
+    if (
+      prevword[prevword.length - 1] !== usersword[0] ||
+      usersword[usersword.length - 1] === "ン"
+    ) {
+      console.log(wordList);
+      alert("ゲーム終了");
+
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <div>
       <button
@@ -95,7 +106,7 @@ function App() {
       >
         最初の文字決めるボタン的な
       </button>
-      <p>最初の単語:{firstWordData}</p>
+      <p>最初の単語:{prevWord}</p>
       <p>前の単語:{prevWord}</p>
       <input
         value={sendText}
@@ -104,9 +115,7 @@ function App() {
       <button
         onClick={() => {
           setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
-          if (checkGameEnd(sendText)) {
-            alert("ゲーム終了");
-          } else {
+          if (!usersGameEnd(prevWord, sendText)) {
             wordCheck(sendText);
           }
         }}
