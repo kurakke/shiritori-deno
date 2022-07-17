@@ -50,28 +50,11 @@ serve(async (req) => {
   }
 
   if (req.method === "POST" && pathname === "/word") {
-    // const requestJson = await req.json();
-
-    // const nextWord = requestJson.nextWord;
-
-    // if (
-    //   nextWord.length > 0 &&
-    //   previousWord.charAt(previousWord.length - 1) !== nextWord.charAt(0)
-    // ) {
-    //   return new Response("前の単語に続いていません。", { status: 400 });
-    // }
-    // console.log(req);
-    // console.log(req.body.getReader().read());
-    // console.log("yahharo");
-    // req.body.getReader().then(function A(value) {
-    //   console.log(value);
-    // });
     const reqData = await req.json();
     console.log("yahharo-");
     console.log(
       getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
     );
-    // previousWord = nextWord;
     return new Response(
       JSON.stringify(
         getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
