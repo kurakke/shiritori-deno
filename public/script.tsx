@@ -27,6 +27,18 @@ function App() {
       false;
     }
   };
+  const isShiritorirWord = (data: string) => {
+    if (data[data.length - 1] === "ン") {
+      return false;
+    } else {
+      wordList.map((items) => {
+        if (items.Word === data) {
+          return false;
+        }
+      });
+    }
+    return true;
+  };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
@@ -38,6 +50,7 @@ function App() {
     wordList.map((items) => {
       if (items.Word === word) {
         alert("既に使用しています");
+        return false;
       }
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
@@ -63,26 +76,15 @@ function App() {
     }
 
     const previousWord = await response.text();
-
-    console.log(
-      JSON.parse(previousWord)[
-        Math.floor(Math.random() * JSON.parse(previousWord).length)
-      ].name
-    );
     const sentData =
       JSON.parse(previousWord)[
         Math.floor(Math.random() * JSON.parse(previousWord).length)
       ];
     setWordList((prev) => [...prev, { Word: sentData.name, isUser: false }]);
-    console.log(wordList);
     if (checkGameEnd(sentData.name)) {
       alert("ゲーム終了");
     }
-    setPrevWord(
-      JSON.parse(previousWord)[
-        Math.floor(Math.random() * JSON.parse(previousWord).length)
-      ].name
-    );
+    setPrevWord(sentData.name);
   };
   return (
     <div>
