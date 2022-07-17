@@ -23,6 +23,7 @@ function App() {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
+    setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
   const reqData = async (word: string) => {
@@ -109,6 +110,15 @@ function App() {
       >
         送信
       </button>
+      <p>履歴</p>
+      {wordList.map((items) => {
+        return (
+          <>
+            <p>{items.isUser ? "プレイヤー" : "サーバー"}</p>
+            <p>{items.Word}</p>
+          </>
+        );
+      })}
     </div>
   );
 }
