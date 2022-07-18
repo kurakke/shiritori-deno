@@ -1,6 +1,7 @@
 import React, { useState } from "https://cdn.skypack.dev/react@17.0.2?dts";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.2?dts";
 import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
+import { pokemons } from "../pokemon.tsx";
 type keepWord = {
   Word: string;
   isUser: boolean;
@@ -10,11 +11,24 @@ function App() {
   const [sendText, setSendText] = useState<string>("");
   const [prevWord, setPrevWord] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
+  const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
+
+  useStateEffect(() => {
+    // setPokemonBarks(
+    //   pokemons.map(
+    //     (pokemon) =>
+    //       new Audio(`/voice/${pokemon.no.toString().padStart(3, "0")}.wav`)
+    //   )
+    // );
+    // setPokemonBarks((prev) => [...prev, new Audio("/voice/001.wav")]);
+  }, []);
 
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
+    console.log(firstWord.no);
+    // pokemonBarks[0].play();
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
