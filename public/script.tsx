@@ -11,14 +11,6 @@ function App() {
   const [prevWord, setPrevWord] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
 
-  // useStateEffect(() => {
-  //   const dataReq = async () => {
-  //     const response = await fetch("http://localhost:8000/shiritori");
-  //     const previousWord = await response.json();
-  //     setPrevWord(previousWord);
-  //   };
-  //   dataReq();
-  // }, []);
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
@@ -53,9 +45,9 @@ function App() {
       String.fromCharCode(ch.charCodeAt(0) + 0x60)
     );
   };
-  const usersGameEnd = (prevword: string, usersword: string) => {
+  const usersGameEnd = (usersword: string) => {
     if (
-      prevword[prevword.length - 1] !== usersword[0] ||
+      prevWord[prevWord.length - 1] !== usersword[0] ||
       usersword[usersword.length - 1] === "ン"
     ) {
       alert("ゲーム終了");
@@ -71,6 +63,11 @@ function App() {
     } else {
       false;
     }
+    // if (word[word.length - 1] === "ン") {
+    //   return true;
+    // } else {
+    //   false;
+    // }
   };
   const wordCheck = (word: string) => {
     wordList.map((items) => {
@@ -80,10 +77,17 @@ function App() {
       }
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-      reqData(word);
+      if (!usersGameEnd(word)) {
+        reqData(word);
+      }
     } else {
       alert("入力はカタカナです");
     }
+  };
+  const reset = () => {
+    setSendText("");
+    setPrevWord("");
+    setWordList([]);
   };
   return (
     <div>
@@ -103,9 +107,10 @@ function App() {
       <button
         onClick={() => {
           setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
-          if (!usersGameEnd(prevWord, sendText)) {
-            wordCheck(sendText);
-          }
+          // if (!usersGameEnd(sendText)) {
+          //   wordCheck(sendText);
+          // }
+          wordCheck(sendText);
         }}
       >
         送信
