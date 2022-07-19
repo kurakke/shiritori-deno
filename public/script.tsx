@@ -13,6 +13,7 @@ const PrevWordP = styled.p``;
 const PrevUserP = styled.p``;
 const HistoryP = styled.p``;
 const HistoriesDiv = styled.div``;
+const ResetButton = styled.button``;
 
 type keepWord = {
   Word: string;
@@ -104,6 +105,7 @@ function App() {
     setSendText("");
     setPrevWord("");
     setWordList([]);
+    setIsFirst(true);
   };
   return (
     <All>
@@ -160,6 +162,13 @@ function App() {
           );
         })}
       </HistoriesDiv>
+      <ResetButton
+        onClick={() => {
+          reset();
+        }}
+      >
+        リセット
+      </ResetButton>
     </All>
   );
 }
