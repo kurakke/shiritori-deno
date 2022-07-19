@@ -99,7 +99,8 @@ function App() {
     // setChangeWord((prev) => prev.replace("Y", "ワイ"));
     // setChangeWord((prev) => prev.replace("♂", "オス"));
     // setChangeWord((prev) => prev.replace("♀", "メス"));
-    const A = word.replace("ァ", "ア");
+    const first = word.replace("2", "ツー");
+    const A = first.replace("ァ", "ア");
     const B = A.replace("ィ", "イ");
     const C = B.replace("ゥ", "ウ");
     const D = C.replace("ェ", "エ");
@@ -114,7 +115,8 @@ function App() {
     const M = L.replace("X", "エックス");
     const N = M.replace("♂", "オス");
     const O = N.replace("♀", "メス");
-    return O;
+    const P = O.replace("ー", "");
+    return P;
   };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -143,7 +145,7 @@ function App() {
         Math.floor(Math.random() * JSON.parse(previousWord).length)
       ];
     setWordList((prev) => [...prev, { Word: sentData.name, isUser: false }]);
-    if (checkGameEnd(sentData.name)) {
+    if (checkServerGameEnd(sentData.name)) {
       alert("ゲーム終了");
     }
     setPrevWord(sentData.name);
@@ -176,14 +178,23 @@ function App() {
       return false;
     }
   };
-  const checkGameEnd = (word: string) => {
+  const checkServerGameEnd = (word: string) => {
     if (
       changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
     ) {
       return true;
-    } else {
-      false;
+    } else if (word === null) {
+      return true;
+    } else if (
+      wordList
+        .map((item) => {
+          return item.Word;
+        })
+        .includes(word)
+    ) {
+      return true;
     }
+
     // if (word[word.length - 1] === "ン") {
     //   return true;
     // } else {

@@ -60,7 +60,9 @@ serve(async (req) => {
     return new Response(
       JSON.stringify(
         getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
-      ),
+      ) === !null
+        ? getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+        : "null",
       {
         headers: {
           "content-type": "application/json",
