@@ -1,6 +1,7 @@
 import React, { useState } from "https://cdn.skypack.dev/react@17.0.2?dts";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.2?dts";
 import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
+import { pokemons } from "../pokemon.tsx";
 type keepWord = {
   Word: string;
   isUser: boolean;
@@ -10,11 +11,41 @@ function App() {
   const [sendText, setSendText] = useState<string>("");
   const [prevWord, setPrevWord] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
+  const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
+  // useEffect(() => {
+  // setPokemonBarks(
+  //   pokemons.map(
+  //     (pokemon) =>
+  //       new Audio(`/voice/${pokemon.no.toString().padStart(3, "0")}.wav`)
+  //   )
+  // );
+  // setPokemonBarks((prev) => [...prev, new Audio("/voice/001.wav")]);
+  // }, []);
+  const changeAbnormalWord = (word: string) => {
+    word.replace("ァ", "ア");
+    word.replace("ィ", "イ");
+    word.replace("ゥ", "ウ");
+    word.replace("ェ", "エ");
+    word.replace("ォ", "オ");
+    word.replace("ッ", "ツ");
+    word.replace("ャ", "ヤ");
+    word.replace("ュ", "ユ");
+    word.replace("ョ", "ヨ");
+    word.replace("ー", "");
+    word.replace("Z", "ゼット");
+    word.replace("Y", "ワイ");
+    word.replace("X", "エックス");
+    word.replace("♂", "オス");
+    word.replace("♀", "メス");
+    return word;
+  };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
+    console.log(firstWord.no);
+    // pokemonBarks[0].play();
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
@@ -47,8 +78,11 @@ function App() {
   };
   const usersGameEnd = (usersword: string) => {
     if (
-      prevWord[prevWord.length - 1] !== usersword[0] ||
-      usersword[usersword.length - 1] === "ン"
+      changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
+        changeAbnormalWord(usersword)[0] ||
+      changeAbnormalWord(usersword)[
+        changeAbnormalWord(usersword).length - 1
+      ] === "ン"
     ) {
       alert("ゲーム終了");
 
@@ -58,7 +92,9 @@ function App() {
     }
   };
   const checkGameEnd = (word: string) => {
-    if (word[word.length - 1] === "ン") {
+    if (
+      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
+    ) {
       return true;
     } else {
       false;
