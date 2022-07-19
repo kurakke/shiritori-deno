@@ -83,38 +83,38 @@ function App() {
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
   const changeAbnormalWord = (word: string) => {
-    const [changeWord, setChangeWord] = useState<string>(word);
-    setChangeWord((prev) => prev.replace("ァ", "ア"));
-    setChangeWord((prev) => prev.replace("ィ", "イ"));
-    setChangeWord((prev) => prev.replace("ゥ", "ウ"));
-    setChangeWord((prev) => prev.replace("ェ", "エ"));
-    setChangeWord((prev) => prev.replace("ォ", "オ"));
-    setChangeWord((prev) => prev.replace("ャ", "ヤ"));
-    setChangeWord((prev) => prev.replace("ュ", "ユ"));
-    setChangeWord((prev) => prev.replace("ョ", "ヨ"));
-    setChangeWord((prev) => prev.replace("ッ", "ツ"));
-    setChangeWord((prev) => prev.replace("ー", ""));
-    setChangeWord((prev) => prev.replace("Z", "ゼット"));
-    setChangeWord((prev) => prev.replace("X", "エックス"));
-    setChangeWord((prev) => prev.replace("Y", "ワイ"));
-    setChangeWord((prev) => prev.replace("♂", "オス"));
-    setChangeWord((prev) => prev.replace("♀", "メス"));
-    // word.replace("ァ", "ア");
-    // word.replace("ィ", "イ");
-    // word.replace("ゥ", "ウ");
-    // word.replace("ェ", "エ");
-    // word.replace("ォ", "オ");
-    // word.replace("ッ", "ツ");
-    // word.replace("ャ", "ヤ");
-    // word.replace("ュ", "ユ");
-    // word.replace("ョ", "ヨ");
-    // word.replace("ー", "");
-    // word.replace("Z", "ゼット");
-    // word.replace("Y", "ワイ");
-    // word.replace("X", "エックス");
-    // word.replace("♂", "オス");
-    // word.replace("♀", "メス");
-    return changeWord;
+    // const [changeWord, setChangeWord] = useState<string>(word);
+    // setChangeWord((prev) => prev.replace("ァ", "ア"));
+    // setChangeWord((prev) => prev.replace("ィ", "イ"));
+    // setChangeWord((prev) => prev.replace("ゥ", "ウ"));
+    // setChangeWord((prev) => prev.replace("ェ", "エ"));
+    // setChangeWord((prev) => prev.replace("ォ", "オ"));
+    // setChangeWord((prev) => prev.replace("ャ", "ヤ"));
+    // setChangeWord((prev) => prev.replace("ュ", "ユ"));
+    // setChangeWord((prev) => prev.replace("ョ", "ヨ"));
+    // setChangeWord((prev) => prev.replace("ッ", "ツ"));
+    // setChangeWord((prev) => prev.replace("ー", ""));
+    // setChangeWord((prev) => prev.replace("Z", "ゼット"));
+    // setChangeWord((prev) => prev.replace("X", "エックス"));
+    // setChangeWord((prev) => prev.replace("Y", "ワイ"));
+    // setChangeWord((prev) => prev.replace("♂", "オス"));
+    // setChangeWord((prev) => prev.replace("♀", "メス"));
+    const A = word.replace("ァ", "ア");
+    const B = A.replace("ィ", "イ");
+    const C = B.replace("ゥ", "ウ");
+    const D = C.replace("ェ", "エ");
+    const E = D.replace("ォ", "オ");
+    const F = E.replace("ッ", "ツ");
+    const G = F.replace("ャ", "ヤ");
+    const H = G.replace("ュ", "ユ");
+    const I = H.replace("ョ", "ヨ");
+    const J = I.replace("ー", "");
+    const K = J.replace("Z", "ゼット");
+    const L = K.replace("Y", "ワイ");
+    const M = L.replace("X", "エックス");
+    const N = M.replace("♂", "オス");
+    const O = N.replace("♀", "メス");
+    return O;
   };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -131,7 +131,7 @@ function App() {
     const response = await fetch("http://localhost:8000/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ word }),
+      body: JSON.stringify({ sendText }),
     });
     if (response.status / 100 !== 2) {
       alert(await response.text());
