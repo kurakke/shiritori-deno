@@ -38,6 +38,7 @@ function App() {
     word.replace("X", "エックス");
     word.replace("♂", "オス");
     word.replace("♀", "メス");
+    return word;
   };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -77,8 +78,11 @@ function App() {
   };
   const usersGameEnd = (usersword: string) => {
     if (
-      prevWord[prevWord.length - 1] !== usersword[0] ||
-      usersword[usersword.length - 1] === "ン"
+      changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
+        changeAbnormalWord(usersword)[0] ||
+      changeAbnormalWord(usersword)[
+        changeAbnormalWord(usersword).length - 1
+      ] === "ン"
     ) {
       alert("ゲーム終了");
 
@@ -88,7 +92,9 @@ function App() {
     }
   };
   const checkGameEnd = (word: string) => {
-    if (word[word.length - 1] === "ン") {
+    if (
+      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
+    ) {
       return true;
     } else {
       false;
