@@ -1,7 +1,21 @@
 import React, { useState } from "https://cdn.skypack.dev/react@17.0.2?dts";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.2?dts";
 import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
+import styled, {
+  createGlobalStyle,
+} from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
 import { pokemons } from "../pokemon.tsx";
+
+const All = styled.div``;
+const FirstButton = styled.button``;
+const WordInput = styled.input``;
+const WordSendButton = styled.button``;
+const PrevWordP = styled.p``;
+const PrevUserP = styled.p``;
+const HistoryP = styled.p``;
+const HistoriesDiv = styled.div``;
+const ResetButton = styled.button``;
+
 type keepWord = {
   Word: string;
   isUser: boolean;
@@ -11,6 +25,7 @@ function App() {
   const [sendText, setSendText] = useState<string>("");
   const [prevWord, setPrevWord] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
+  const [isFirst, setIsFirst] = useState<boolean>(true);
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
   // useEffect(() => {
@@ -77,14 +92,16 @@ function App() {
     );
   };
   const usersGameEnd = (usersword: string) => {
-    if (
+    if (prevWord === "") {
+      return false;
+    } else if (
       changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
         changeAbnormalWord(usersword)[0] ||
       changeAbnormalWord(usersword)[
         changeAbnormalWord(usersword).length - 1
       ] === "ン"
     ) {
-      alert("ゲーム終了");
+      alert("やっはろー");
 
       return true;
     } else {
@@ -124,24 +141,43 @@ function App() {
     setSendText("");
     setPrevWord("");
     setWordList([]);
+    setIsFirst(true);
   };
   return (
-    <div>
-      <button
+    <All>
+      {/* <button
         onClick={() => {
           firstReqData();
         }}
       >
         最初の文字決めるボタン的な
-      </button>
-      <p>最初の単語:{prevWord}</p>
-      <p>前の単語:{prevWord}</p>
-      <input
+      </button> */}
+      {(() => {
+        if (isFirst) {
+          return (
+            <div>
+              <FirstButton
+                onClick={() => {
+                  firstReqData();
+                }}
+              >
+                最初の単語を決めるボタン的な
+              </FirstButton>
+              <p>最初の単語:{prevWord}</p>
+            </div>
+          );
+        } else {
+          return <p>前の単語:{prevWord}</p>;
+        }
+      })()}
+
+      <WordInput
         value={sendText}
         onChange={(event) => setSendText(hiraToKana(event.target.value))}
-      ></input>
-      <button
+      ></WordInput>
+      <WordSendButton
         onClick={() => {
+          setIsFirst(false);
           setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
           // if (!usersGameEnd(sendText)) {
           //   wordCheck(sendText);
@@ -150,17 +186,26 @@ function App() {
         }}
       >
         送信
-      </button>
-      <p>履歴</p>
-      {wordList.map((items) => {
-        return (
-          <>
-            <p>{items.isUser ? "プレイヤー" : "サーバー"}</p>
-            <p>{items.Word}</p>
-          </>
-        );
-      })}
-    </div>
+      </WordSendButton>
+      <HistoryP>履歴</HistoryP>
+      <HistoriesDiv>
+        {wordList.map((items) => {
+          return (
+            <>
+              <PrevUserP>{items.isUser ? "プレイヤー" : "サーバー"}</PrevUserP>
+              <PrevWordP>{items.Word}</PrevWordP>
+            </>
+          );
+        })}
+      </HistoriesDiv>
+      <ResetButton
+        onClick={() => {
+          reset();
+        }}
+      >
+        リセット
+      </ResetButton>
+    </All>
   );
 }
 
