@@ -71,7 +71,7 @@ serve(async (req) => {
   }
   console.log("out serverDir");
   return serveDir(req, {
-    fsRoot: "dist",
+    fsRoot: "public",
 
     urlRoot: "",
 
