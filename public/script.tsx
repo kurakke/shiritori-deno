@@ -1,6 +1,12 @@
 import React, { useState } from "https://cdn.skypack.dev/react@17.0.2?dts";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.2?dts";
 import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
+import styled, {
+  createGlobalStyle,
+} from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
+
+const All = styled.div``;
+
 type keepWord = {
   Word: string;
   isUser: boolean;
@@ -90,7 +96,7 @@ function App() {
     setWordList([]);
   };
   return (
-    <div>
+    <All>
       <button
         onClick={() => {
           firstReqData();
@@ -124,7 +130,7 @@ function App() {
           </>
         );
       })}
-    </div>
+    </All>
   );
 }
 
