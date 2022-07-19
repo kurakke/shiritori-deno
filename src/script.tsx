@@ -6,16 +6,70 @@ import styled, {
 } from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
 import { pokemons } from "../pokemon.tsx";
 
-const All = styled.div``;
-const FirstButton = styled.button``;
-const WordInput = styled.input``;
-const WordSendButton = styled.button``;
-const PrevWordP = styled.p``;
-const PrevUserP = styled.p``;
-const HistoryP = styled.p``;
-const HistoriesDiv = styled.div``;
-const ResetButton = styled.button``;
+const AllDiv = styled.div`
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #e9e5de;
+`;
+const TitleH1 = styled.h1`
+  padding-top: 20px;
+  text-align: center;
+`;
+const PrevP = styled.p`
+  display: flex;
+  justify-content: center;
+`;
 
+const WordInput = styled.input`
+  width: 300px;
+  height: 50px;
+  border: 1px solid;
+  border-color: red;
+`;
+const WordSendDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const WordSendButton = styled.button``;
+const PrevWordDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+  border: 1px solid;
+  border-color: black;
+  width: 240px;
+  height: 30px;
+`;
+const PrevUserDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  border: 1px solid;
+  border-color: purple;
+  width: 100px;
+  height: 30px;
+`;
+
+const HistoriesDiv = styled.div`
+  margin: 10px auto;
+  width:500px;
+  max-height:400px
+  background-color: red;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
+const FlexHistoryDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const ResetButton = styled.button``;
+const FirstButton = styled.button``;
 type keepWord = {
   Word: string;
   isUser: boolean;
@@ -28,32 +82,39 @@ function App() {
   const [isFirst, setIsFirst] = useState<boolean>(true);
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
-  // useEffect(() => {
-  // setPokemonBarks(
-  //   pokemons.map(
-  //     (pokemon) =>
-  //       new Audio(`/voice/${pokemon.no.toString().padStart(3, "0")}.wav`)
-  //   )
-  // );
-  // setPokemonBarks((prev) => [...prev, new Audio("/voice/001.wav")]);
-  // }, []);
   const changeAbnormalWord = (word: string) => {
-    word.replace("ァ", "ア");
-    word.replace("ィ", "イ");
-    word.replace("ゥ", "ウ");
-    word.replace("ェ", "エ");
-    word.replace("ォ", "オ");
-    word.replace("ッ", "ツ");
-    word.replace("ャ", "ヤ");
-    word.replace("ュ", "ユ");
-    word.replace("ョ", "ヨ");
-    word.replace("ー", "");
-    word.replace("Z", "ゼット");
-    word.replace("Y", "ワイ");
-    word.replace("X", "エックス");
-    word.replace("♂", "オス");
-    word.replace("♀", "メス");
-    return word;
+    const [changeWord, setChangeWord] = useState<string>(word);
+    setChangeWord((prev) => prev.replace("ァ", "ア"));
+    setChangeWord((prev) => prev.replace("ィ", "イ"));
+    setChangeWord((prev) => prev.replace("ゥ", "ウ"));
+    setChangeWord((prev) => prev.replace("ェ", "エ"));
+    setChangeWord((prev) => prev.replace("ォ", "オ"));
+    setChangeWord((prev) => prev.replace("ャ", "ヤ"));
+    setChangeWord((prev) => prev.replace("ュ", "ユ"));
+    setChangeWord((prev) => prev.replace("ョ", "ヨ"));
+    setChangeWord((prev) => prev.replace("ッ", "ツ"));
+    setChangeWord((prev) => prev.replace("ー", ""));
+    setChangeWord((prev) => prev.replace("Z", "ゼット"));
+    setChangeWord((prev) => prev.replace("X", "エックス"));
+    setChangeWord((prev) => prev.replace("Y", "ワイ"));
+    setChangeWord((prev) => prev.replace("♂", "オス"));
+    setChangeWord((prev) => prev.replace("♀", "メス"));
+    // word.replace("ァ", "ア");
+    // word.replace("ィ", "イ");
+    // word.replace("ゥ", "ウ");
+    // word.replace("ェ", "エ");
+    // word.replace("ォ", "オ");
+    // word.replace("ッ", "ツ");
+    // word.replace("ャ", "ヤ");
+    // word.replace("ュ", "ユ");
+    // word.replace("ョ", "ヨ");
+    // word.replace("ー", "");
+    // word.replace("Z", "ゼット");
+    // word.replace("Y", "ワイ");
+    // word.replace("X", "エックス");
+    // word.replace("♂", "オス");
+    // word.replace("♀", "メス");
+    return changeWord;
   };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -65,10 +126,12 @@ function App() {
   };
 
   const reqData = async (word: string) => {
+    console.log("in reqData");
+
     const response = await fetch("http://localhost:8000/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ sendText }),
+      body: JSON.stringify({ word }),
     });
     if (response.status / 100 !== 2) {
       alert(await response.text());
@@ -92,19 +155,24 @@ function App() {
     );
   };
   const usersGameEnd = (usersword: string) => {
+    console.log("usersGameEnd in kansuu");
+    console.log(changeAbnormalWord(prevWord));
+
     if (prevWord === "") {
       return false;
     } else if (
       changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
-        changeAbnormalWord(usersword)[0] ||
+        usersword[0] ||
       changeAbnormalWord(usersword)[
         changeAbnormalWord(usersword).length - 1
       ] === "ン"
     ) {
+      console.log("in if true");
       alert("やっはろー");
-
       return true;
     } else {
+      console.log("in if false");
+
       return false;
     }
   };
@@ -123,6 +191,8 @@ function App() {
     // }
   };
   const wordCheck = (word: string) => {
+    console.log("wordCheck");
+
     wordList.map((items) => {
       if (items.Word === word) {
         alert("既に使用しています");
@@ -130,7 +200,11 @@ function App() {
       }
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
+      console.log("word.mathch in if");
+
       if (!usersGameEnd(word)) {
+        console.log("usersGameEnd in if");
+
         reqData(word);
       }
     } else {
@@ -144,7 +218,8 @@ function App() {
     setIsFirst(true);
   };
   return (
-    <All>
+    <AllDiv>
+      <TitleH1>ポケモンしりとり</TitleH1>
       {/* <button
         onClick={() => {
           firstReqData();
@@ -154,58 +229,60 @@ function App() {
       </button> */}
       {(() => {
         if (isFirst) {
-          return (
-            <div>
-              <FirstButton
-                onClick={() => {
-                  firstReqData();
-                }}
-              >
-                最初の単語を決めるボタン的な
-              </FirstButton>
-              <p>最初の単語:{prevWord}</p>
-            </div>
-          );
+          return <PrevP>最初の単語:{prevWord}</PrevP>;
         } else {
-          return <p>前の単語:{prevWord}</p>;
+          return <PrevP>前の単語:{prevWord}</PrevP>;
         }
       })()}
 
-      <WordInput
-        value={sendText}
-        onChange={(event) => setSendText(hiraToKana(event.target.value))}
-      ></WordInput>
-      <WordSendButton
-        onClick={() => {
-          setIsFirst(false);
-          setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
-          // if (!usersGameEnd(sendText)) {
-          //   wordCheck(sendText);
-          // }
-          wordCheck(sendText);
-        }}
-      >
-        送信
-      </WordSendButton>
-      <HistoryP>履歴</HistoryP>
+      <WordSendDiv>
+        <WordInput
+          value={sendText}
+          onChange={(event) => setSendText(hiraToKana(event.target.value))}
+        ></WordInput>
+        <WordSendButton
+          onClick={() => {
+            setIsFirst(false);
+            setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
+            // if (!usersGameEnd(sendText)) {
+            //   wordCheck(sendText);
+            // }
+            wordCheck(sendText);
+          }}
+        >
+          送信
+        </WordSendButton>
+      </WordSendDiv>
+      <Buttons>
+        <FirstButton
+          onClick={() => {
+            firstReqData();
+          }}
+        >
+          最初の単語を決めるボタン的な
+        </FirstButton>
+        <ResetButton
+          onClick={() => {
+            reset();
+          }}
+        >
+          リセット
+        </ResetButton>
+      </Buttons>
+      {/* <HistoryP>履歴</HistoryP> */}
       <HistoriesDiv>
         {wordList.map((items) => {
           return (
-            <>
-              <PrevUserP>{items.isUser ? "プレイヤー" : "サーバー"}</PrevUserP>
-              <PrevWordP>{items.Word}</PrevWordP>
-            </>
+            <FlexHistoryDiv>
+              <PrevUserDiv>
+                {items.isUser ? "プレイヤー" : "サーバー"}
+              </PrevUserDiv>
+              <PrevWordDiv>{items.Word}</PrevWordDiv>
+            </FlexHistoryDiv>
           );
         })}
       </HistoriesDiv>
-      <ResetButton
-        onClick={() => {
-          reset();
-        }}
-      >
-        リセット
-      </ResetButton>
-    </All>
+    </AllDiv>
   );
 }
 
