@@ -13,16 +13,32 @@ function App() {
   const [wordList, setWordList] = useState<keepWord[]>([]);
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
-  useStateEffect(() => {
-    // setPokemonBarks(
-    //   pokemons.map(
-    //     (pokemon) =>
-    //       new Audio(`/voice/${pokemon.no.toString().padStart(3, "0")}.wav`)
-    //   )
-    // );
-    // setPokemonBarks((prev) => [...prev, new Audio("/voice/001.wav")]);
-  }, []);
-
+  // useEffect(() => {
+  // setPokemonBarks(
+  //   pokemons.map(
+  //     (pokemon) =>
+  //       new Audio(`/voice/${pokemon.no.toString().padStart(3, "0")}.wav`)
+  //   )
+  // );
+  // setPokemonBarks((prev) => [...prev, new Audio("/voice/001.wav")]);
+  // }, []);
+  const changeAbnormalWord = (word: string) => {
+    word.replace("ァ", "ア");
+    word.replace("ィ", "イ");
+    word.replace("ゥ", "ウ");
+    word.replace("ェ", "エ");
+    word.replace("ォ", "オ");
+    word.replace("ッ", "ツ");
+    word.replace("ャ", "ヤ");
+    word.replace("ュ", "ユ");
+    word.replace("ョ", "ヨ");
+    word.replace("ー", "");
+    word.replace("Z", "ゼット");
+    word.replace("Y", "ワイ");
+    word.replace("X", "エックス");
+    word.replace("♂", "オス");
+    word.replace("♀", "メス");
+  };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
     const firstWord = await data.json();
