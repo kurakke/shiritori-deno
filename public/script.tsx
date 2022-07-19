@@ -6,6 +6,13 @@ import styled, {
 } from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
 
 const All = styled.div``;
+const FirstButton = styled.button``;
+const WordInput = styled.input``;
+const WordSendButton = styled.button``;
+const PrevWordP = styled.p``;
+const PrevUserP = styled.p``;
+const HistoryP = styled.p``;
+const HistoriesDiv = styled.div``;
 
 type keepWord = {
   Word: string;
@@ -16,6 +23,7 @@ function App() {
   const [sendText, setSendText] = useState<string>("");
   const [prevWord, setPrevWord] = useState<string>("");
   const [wordList, setWordList] = useState<keepWord[]>([]);
+  const [isFirst, setIsFirst] = useState<boolean>(true);
 
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -52,11 +60,13 @@ function App() {
     );
   };
   const usersGameEnd = (usersword: string) => {
-    if (
+    if (prevWord === "") {
+      return false;
+    } else if (
       prevWord[prevWord.length - 1] !== usersword[0] ||
       usersword[usersword.length - 1] === "ン"
     ) {
-      alert("ゲーム終了");
+      alert("やっはろー");
 
       return true;
     } else {
@@ -97,21 +107,39 @@ function App() {
   };
   return (
     <All>
-      <button
+      {/* <button
         onClick={() => {
           firstReqData();
         }}
       >
         最初の文字決めるボタン的な
-      </button>
-      <p>最初の単語:{prevWord}</p>
-      <p>前の単語:{prevWord}</p>
-      <input
+      </button> */}
+      {(() => {
+        if (isFirst) {
+          return (
+            <div>
+              <FirstButton
+                onClick={() => {
+                  firstReqData();
+                }}
+              >
+                最初の単語を決めるボタン的な
+              </FirstButton>
+              <p>最初の単語:{prevWord}</p>
+            </div>
+          );
+        } else {
+          return <p>前の単語:{prevWord}</p>;
+        }
+      })()}
+
+      <WordInput
         value={sendText}
         onChange={(event) => setSendText(hiraToKana(event.target.value))}
-      ></input>
-      <button
+      ></WordInput>
+      <WordSendButton
         onClick={() => {
+          setIsFirst(false);
           setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
           // if (!usersGameEnd(sendText)) {
           //   wordCheck(sendText);
@@ -120,16 +148,18 @@ function App() {
         }}
       >
         送信
-      </button>
-      <p>履歴</p>
-      {wordList.map((items) => {
-        return (
-          <>
-            <p>{items.isUser ? "プレイヤー" : "サーバー"}</p>
-            <p>{items.Word}</p>
-          </>
-        );
-      })}
+      </WordSendButton>
+      <HistoryP>履歴</HistoryP>
+      <HistoriesDiv>
+        {wordList.map((items) => {
+          return (
+            <>
+              <PrevUserP>{items.isUser ? "プレイヤー" : "サーバー"}</PrevUserP>
+              <PrevWordP>{items.Word}</PrevWordP>
+            </>
+          );
+        })}
+      </HistoriesDiv>
     </All>
   );
 }
