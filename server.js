@@ -16,6 +16,26 @@ function getAvalablePokemons(tailChar) {
     );
   return avalablePokemons;
 }
+const changeAbnormalWord = (word) => {
+  const first = word.replace("2", "ツー");
+  const A = first.replace("ァ", "ア");
+  const B = A.replace("ィ", "イ");
+  const C = B.replace("ゥ", "ウ");
+  const D = C.replace("ェ", "エ");
+  const E = D.replace("ォ", "オ");
+  const F = E.replace("ッ", "ツ");
+  const G = F.replace("ャ", "ヤ");
+  const H = G.replace("ュ", "ユ");
+  const I = H.replace("ョ", "ヨ");
+  const J = I.replace("ー", "");
+  const K = J.replace("Z", "ゼット");
+  const L = K.replace("Y", "ワイ");
+  const M = L.replace("X", "エックス");
+  const N = M.replace("♂", "オス");
+  const O = N.replace("♀", "メス");
+  const P = O.replace("ー", "");
+  return P;
+};
 serve(async (req) => {
   const pathname = new URL(req.url).pathname;
   console.log(req);
@@ -55,13 +75,25 @@ serve(async (req) => {
     const reqData = await req.json();
     console.log("yahharo-");
     console.log(
-      getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+      getAvalablePokemons(
+        changeAbnormalWord(reqData).sendText[
+          changeAbnormalWord(reqData).sendText.length - 1
+        ]
+      )
     );
     return new Response(
       JSON.stringify(
-        getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+        getAvalablePokemons(
+          changeAbnormalWord(reqData).sendText[
+            changeAbnormalWord(reqData).sendText.length - 1
+          ]
+        )
       ) === !null
-        ? getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+        ? getAvalablePokemons(
+            changeAbnormalWord(reqData).sendText[
+              changeAbnormalWord(reqData).sendText.length - 1
+            ]
+          )
         : "null",
       {
         headers: {
