@@ -125,16 +125,14 @@ function App() {
     return O;
   };
   const firstReqData = async () => {
-    const data = await fetch("http://localhost:8000/firstData");
+    const data = await fetch("/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
-  const reqData = async (word: string) => {
-    console.log("in reqData");
-
-    const response = await fetch("http://localhost:8000/word", {
+  const reqData = async () => {
+    const response = await fetch("/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ sendText }),
@@ -161,9 +159,6 @@ function App() {
     );
   };
   const usersGameEnd = (usersword: string) => {
-    console.log("usersGameEnd in kansuu");
-    console.log(changeAbnormalWord(prevWord));
-
     if (prevWord === "") {
       return false;
     } else if (
@@ -173,12 +168,9 @@ function App() {
         changeAbnormalWord(usersword).length - 1
       ] === "ン"
     ) {
-      console.log("in if true");
       alert("やっはろー");
       return true;
     } else {
-      console.log("in if false");
-
       return false;
     }
   };
@@ -198,8 +190,6 @@ function App() {
     }
   };
   const wordCheck = (word: string) => {
-    console.log("wordCheck");
-
     wordList.map((items) => {
       if (items.Word === word) {
         alert("既に使用しています");
@@ -207,12 +197,8 @@ function App() {
       }
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-      console.log("word.mathch in if");
-
       if (!usersGameEnd(word)) {
-        console.log("usersGameEnd in if");
-
-        reqData(word);
+        reqData();
       }
     } else {
       alert("入力はカタカナです");
@@ -276,7 +262,9 @@ function App() {
             return (
               <FlexHistoryDiv>
                 <IndexDiv>{index + 1}</IndexDiv>
-                <PrevUserDiv>{items.isUser ? "プレイヤー" : "コンピューター"}</PrevUserDiv>
+                <PrevUserDiv>
+                  {items.isUser ? "プレイヤー" : "コンピューター"}
+                </PrevUserDiv>
                 <PrevWordDiv>{items.Word}</PrevWordDiv>
               </FlexHistoryDiv>
             );
