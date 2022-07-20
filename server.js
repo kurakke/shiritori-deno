@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.138.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.138.0/http/file_server.ts";
-import { pokemons } from "./pokemon.tsx";
+import { pokemons } from "./components/pokemon.tsx";
 let previousWord = "しりとり";
 
 let yahharo = "やっはろ";
@@ -16,6 +16,26 @@ function getAvalablePokemons(tailChar) {
     );
   return avalablePokemons;
 }
+const changeAbnormalWord = (word) => {
+  const first = word.replace("2", "ツー");
+  const smallA = first.replace("ァ", "ア");
+  const smallI = smallA.replace("ィ", "イ");
+  const smallU = smallI.replace("ゥ", "ウ");
+  const smallE = smallU.replace("ェ", "エ");
+  const smallO = smallE.replace("ォ", "オ");
+  const smallTu = smallO.replace("ッ", "ツ");
+  const smallYa = smallTu.replace("ャ", "ヤ");
+  const smallYu = smallYa.replace("ュ", "ユ");
+  const smallYo = smallYu.replace("ョ", "ヨ");
+  const hihun = smallYo.replace("ー", "");
+  const strZ = hihun.replace("Z", "ゼット");
+  const strY = strZ.replace("Y", "ワイ");
+  const strX = strY.replace("X", "エックス");
+  const male = strX.replace("♂", "オス");
+  const female = male.replace("♀", "メス");
+  const nextHihun = female.replace("ー", "");
+  return nextHihun;
+};
 serve(async (req) => {
   const pathname = new URL(req.url).pathname;
   console.log(req);
@@ -54,12 +74,13 @@ serve(async (req) => {
   if (req.method === "POST" && pathname === "/word") {
     const reqData = await req.json();
     console.log("yahharo-");
+    const changedWord = changeAbnormalWord(reqData.sendText);
     console.log(
-      getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+      getAvalablePokemons(changedWord[changedWord.length - 1])
     );
     return new Response(
       JSON.stringify(
-        getAvalablePokemons(reqData.sendText[reqData.sendText.length - 1])
+        getAvalablePokemons(changedWord[changedWord.length - 1])
       ),
       {
         headers: {
