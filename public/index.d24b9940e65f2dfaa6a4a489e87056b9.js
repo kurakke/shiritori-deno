@@ -8932,7 +8932,7 @@
   }();
   var styled_components_default = He2;
 
-  // deno:file:///mnt/c/abc/internship/jig/deno/src/script.tsx
+  // deno:file:///mnt/c/abc/internship/jig/deno/src/style.ts
   var AllDiv = styled_components_default.div`
   min-height: 100vh;
   min-width: 100vw;
@@ -8944,8 +8944,6 @@
   align-items: center;
 `;
   var TitleH1 = styled_components_default.h1`
-  margin-block-start: 0;
-  margin-block-end: 0;
   padding-top: 134px;
   padding-bottom: 50px;
   margin: 0;
@@ -8960,6 +8958,7 @@
   var WordSendDiv = styled_components_default.div`
   padding: 20px;
 `;
+  var WordDiv = styled_components_default.div``;
   var WordSendButton = styled_components_default.button`
   width: 60px;
   height: 34px;
@@ -8982,8 +8981,8 @@
   var HistoriesDiv = styled_components_default.div`
   margin: 10px auto;
   width: 500px;
-  max-height: 288px;
-  background-color: red;
+  max-height: 256px;
+  background-color: #c6fcff;
   overflow-y: scroll;
   overflow-x: hidden;
 `;
@@ -8991,10 +8990,11 @@
   display: flex;
 `;
   var IndexDiv = styled_components_default.div`
-  background-color: yellow;
+  background-color: #c6fcff;
   display: flex;
   text-align: center;
   align-items: center;
+  border: 1px solid #0d0f41;
   width: 50px;
   height: 30px;
 `;
@@ -9002,9 +9002,9 @@
   display: flex;
   align-items: center;
   text-align: left;
-  background-color: red;
+  background-color: #c6fcff;
   border: 1px solid;
-  border-color: purple;
+  border-color: #0d0f41;
   width: 100px;
   height: 30px;
 `;
@@ -9012,12 +9012,14 @@
   display: flex;
   align-items: center;
   text-align: left;
-  background-color: aqua;
+  background-color: #c6fcff;
   border: 1px solid;
-  border-color: black;
+  border-color: #0d0f41;
   width: 350px;
   height: 30px;
 `;
+
+  // deno:file:///mnt/c/abc/internship/jig/deno/src/script.tsx
   function App() {
     const [sendText, setSendText] = useState("");
     const [prevWord, setPrevWord] = useState("");
@@ -9043,14 +9045,13 @@
       return O2;
     };
     const firstReqData = async () => {
-      const data = await fetch("http://localhost:8000/firstData");
+      const data = await fetch("/firstData");
       const firstWord = await data.json();
       setPrevWord(firstWord.name);
       setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
     };
-    const reqData = async (word) => {
-      console.log("in reqData");
-      const response = await fetch("http://localhost:8000/word", {
+    const reqData = async () => {
+      const response = await fetch("/word", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ sendText })
@@ -9071,16 +9072,15 @@
       return str.replace(/[\u3041-\u3096]/g, (ch2) => String.fromCharCode(ch2.charCodeAt(0) + 96));
     };
     const usersGameEnd = (usersword) => {
-      console.log("usersGameEnd in kansuu");
-      console.log(changeAbnormalWord(prevWord));
       if (prevWord === "") {
         return false;
-      } else if (changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !== usersword[0] || changeAbnormalWord(usersword)[changeAbnormalWord(usersword).length - 1] === "\u30F3") {
-        console.log("in if true");
-        alert("\u3084\u3063\u306F\u308D\u30FC");
+      } else if (changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !== usersword[0]) {
+        alert("\u5358\u8A9E\u304C\u9069\u5207\u306A\u5F62\u3067\u5165\u529B\u3055\u308C\u3066\u3044\u307E\u305B\u3093");
+        return true;
+      } else if (changeAbnormalWord(usersword)[changeAbnormalWord(usersword).length - 1] === "\u30F3") {
+        alert("\u3093\u304C\u672B\u5C3E\u306B\u3064\u3044\u305F\u3089\u8CA0\u3051\u3067\u3059");
         return true;
       } else {
-        console.log("in if false");
         return false;
       }
     };
@@ -9092,13 +9092,13 @@
         }
       });
       if (changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "\u30F3") {
+        alert("\u3093\u304C\u672B\u5C3E\u306B\u3064\u3044\u305F\u306E\u3067\u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC\u306E\u8CA0\u3051\u3067\u3059");
         return true;
       } else {
         false;
       }
     };
     const wordCheck = (word) => {
-      console.log("wordCheck");
       wordList.map((items) => {
         if (items.Word === word) {
           alert("\u65E2\u306B\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059");
@@ -9106,10 +9106,8 @@
         }
       });
       if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-        console.log("word.mathch in if");
         if (!usersGameEnd(word)) {
-          console.log("usersGameEnd in if");
-          reqData(word);
+          reqData();
         }
       } else {
         alert("\u5165\u529B\u306F\u30AB\u30BF\u30AB\u30CA\u3067\u3059");
@@ -9133,7 +9131,7 @@
         ]);
         wordCheck(sendText);
       }
-    }, "\u9001\u4FE1")), (() => {
+    }, /* @__PURE__ */ react_default.createElement(WordDiv, null, "\u9001\u4FE1"))), (() => {
       if (isFirst) {
         return /* @__PURE__ */ react_default.createElement(PrevDiv, null, "\u6700\u521D\u306E\u5358\u8A9E:", prevWord);
       } else {
@@ -9148,7 +9146,7 @@
         reset();
       }
     }, "\u30EA\u30BB\u30C3\u30C8")), /* @__PURE__ */ react_default.createElement(HistoriesDiv, null, wordList.map((items, index2) => {
-      return /* @__PURE__ */ react_default.createElement(FlexHistoryDiv, null, /* @__PURE__ */ react_default.createElement(IndexDiv, null, index2 + 1), /* @__PURE__ */ react_default.createElement(PrevUserDiv, null, items.isUser ? "\u30D7\u30EC\u30A4\u30E4\u30FC" : "\u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC"), /* @__PURE__ */ react_default.createElement(PrevWordDiv, null, items.Word));
+      return /* @__PURE__ */ react_default.createElement(FlexHistoryDiv, null, /* @__PURE__ */ react_default.createElement(IndexDiv, null, index2 + 1), /* @__PURE__ */ react_default.createElement(PrevUserDiv, null, items.isUser ? "\u30D7\u30EC\u30A4\u30E4\u30FC" : "COM"), /* @__PURE__ */ react_default.createElement(PrevWordDiv, null, items.Word));
     }))));
   }
   function main() {
