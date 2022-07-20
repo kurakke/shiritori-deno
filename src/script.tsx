@@ -53,14 +53,14 @@ function App() {
     return O;
   };
   const firstReqData = async () => {
-    const data = await fetch("http://localhost:8000/firstData");
+    const data = await fetch("/firstData");
     const firstWord = await data.json();
     setPrevWord(firstWord.name);
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
   const reqData = async (word: string) => {
-    const response = await fetch("http://localhost:8000/word", {
+    const response = await fetch("/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ sendText }),
