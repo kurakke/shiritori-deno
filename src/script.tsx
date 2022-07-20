@@ -1,98 +1,26 @@
 import React, { useState } from "https://cdn.skypack.dev/react@17.0.2?dts";
 import ReactDOM from "https://cdn.skypack.dev/react-dom@17.0.2?dts";
 import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
-import styled, {
-  createGlobalStyle,
-} from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
+import styled from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
 import { pokemons } from "../components/pokemon.tsx";
-
-const AllDiv = styled.div`
-  min-height: 100vh;
-  min-width: 100vw;
-  background-color: #abbbf0;
-`;
-const ItemsDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const TitleH1 = styled.h1`
-  margin-block-start: 0;
-  margin-block-end: 0;
-  padding-top: 134px;
-  padding-bottom: 50px;
-  margin: 0;
-  color: #0d0f41;
-`;
-const WordInput = styled.input`
-  width: 440px;
-  height: 34px;
-  border: 1px solid;
-  color: #8494c9;
-`;
-const WordSendDiv = styled.div`
-  padding: 20px;
-`;
-const WordSendButton = styled.button`
-  width: 60px;
-  height: 34px;
-`;
-const PrevDiv = styled.div`
-  height: 40px;
-  width: 500px;
-  border: 1px solid black;
-  background-color: #8494c9;
-  display: flex;
-  align-items: center;
-  color: #0d0f41;
-`;
-
-const Buttons = styled.div`
-  padding: 20px;
-  display: flex;
-`;
-const ResetButton = styled.button``;
-const FirstButton = styled.button``;
-
-const HistoriesDiv = styled.div`
-  margin: 10px auto;
-  width: 500px;
-  max-height: 288px;
-  background-color: red;
-  overflow-y: scroll;
-  overflow-x: hidden;
-`;
-const FlexHistoryDiv = styled.div`
-  display: flex;
-`;
-const IndexDiv = styled.div`
-  background-color: yellow;
-  display: flex;
-  text-align: center;
-  align-items: center;
-  width: 50px;
-  height: 30px;
-`;
-const PrevUserDiv = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: left;
-  background-color: red;
-  border: 1px solid;
-  border-color: purple;
-  width: 100px;
-  height: 30px;
-`;
-const PrevWordDiv = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: left;
-  background-color: aqua;
-  border: 1px solid;
-  border-color: black;
-  width: 350px;
-  height: 30px;
-`;
+import {
+  AllDiv,
+  Buttons,
+  FirstButton,
+  FlexHistoryDiv,
+  HistoriesDiv,
+  IndexDiv,
+  ItemsDiv,
+  PrevDiv,
+  PrevUserDiv,
+  PrevWordDiv,
+  ResetButton,
+  TitleH1,
+  WordDiv,
+  WordInput,
+  WordSendButton,
+  WordSendDiv,
+} from "./style.ts";
 
 type keepWord = {
   Word: string;
@@ -132,8 +60,6 @@ function App() {
   };
 
   const reqData = async (word: string) => {
-    console.log("in reqData");
-
     const response = await fetch("http://localhost:8000/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -161,24 +87,22 @@ function App() {
     );
   };
   const usersGameEnd = (usersword: string) => {
-    console.log("usersGameEnd in kansuu");
-    console.log(changeAbnormalWord(prevWord));
-
     if (prevWord === "") {
       return false;
     } else if (
       changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
-        usersword[0] ||
+      usersword[0]
+    ) {
+      alert("単語が適切な形で入力されていません");
+      return true;
+    } else if (
       changeAbnormalWord(usersword)[
         changeAbnormalWord(usersword).length - 1
       ] === "ン"
     ) {
-      console.log("in if true");
-      alert("やっはろー");
+      alert("んが末尾についたら負けです");
       return true;
     } else {
-      console.log("in if false");
-
       return false;
     }
   };
@@ -192,14 +116,13 @@ function App() {
     if (
       changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
     ) {
+      alert("んが末尾についたのでコンピューターの負けです");
       return true;
     } else {
       false;
     }
   };
   const wordCheck = (word: string) => {
-    console.log("wordCheck");
-
     wordList.map((items) => {
       if (items.Word === word) {
         alert("既に使用しています");
@@ -207,11 +130,7 @@ function App() {
       }
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-      console.log("word.mathch in if");
-
       if (!usersGameEnd(word)) {
-        console.log("usersGameEnd in if");
-
         reqData(word);
       }
     } else {
@@ -244,7 +163,7 @@ function App() {
               wordCheck(sendText);
             }}
           >
-            送信
+            <WordDiv>送信</WordDiv>
           </WordSendButton>
         </WordSendDiv>
         {(() => {
