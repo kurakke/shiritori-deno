@@ -8933,15 +8933,91 @@
   var styled_components_default = He2;
 
   // deno:file:///mnt/c/abc/internship/jig/deno/src/script.tsx
-  var All = styled_components_default.div``;
-  var FirstButton = styled_components_default.button``;
-  var WordInput = styled_components_default.input``;
-  var WordSendButton = styled_components_default.button``;
-  var PrevWordP = styled_components_default.p``;
-  var PrevUserP = styled_components_default.p``;
-  var HistoryP = styled_components_default.p``;
-  var HistoriesDiv = styled_components_default.div``;
+  var AllDiv = styled_components_default.div`
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #abbbf0;
+`;
+  var ItemsDiv = styled_components_default.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+  var TitleH1 = styled_components_default.h1`
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-top: 134px;
+  padding-bottom: 50px;
+  margin: 0;
+  color: #0d0f41;
+`;
+  var WordInput = styled_components_default.input`
+  width: 440px;
+  height: 34px;
+  border: 1px solid;
+  color: #8494c9;
+`;
+  var WordSendDiv = styled_components_default.div`
+  padding: 20px;
+`;
+  var WordSendButton = styled_components_default.button`
+  width: 60px;
+  height: 34px;
+`;
+  var PrevDiv = styled_components_default.div`
+  height: 40px;
+  width: 500px;
+  border: 1px solid black;
+  background-color: #8494c9;
+  display: flex;
+  align-items: center;
+  color: #0d0f41;
+`;
+  var Buttons = styled_components_default.div`
+  padding: 20px;
+  display: flex;
+`;
   var ResetButton = styled_components_default.button``;
+  var FirstButton = styled_components_default.button``;
+  var HistoriesDiv = styled_components_default.div`
+  margin: 10px auto;
+  width: 500px;
+  max-height: 288px;
+  background-color: red;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
+  var FlexHistoryDiv = styled_components_default.div`
+  display: flex;
+`;
+  var IndexDiv = styled_components_default.div`
+  background-color: yellow;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  width: 50px;
+  height: 30px;
+`;
+  var PrevUserDiv = styled_components_default.div`
+  display: flex;
+  align-items: center;
+  text-align: left;
+  background-color: red;
+  border: 1px solid;
+  border-color: purple;
+  width: 100px;
+  height: 30px;
+`;
+  var PrevWordDiv = styled_components_default.div`
+  display: flex;
+  align-items: center;
+  text-align: left;
+  background-color: aqua;
+  border: 1px solid;
+  border-color: black;
+  width: 350px;
+  height: 30px;
+`;
   function App() {
     const [sendText, setSendText] = useState("");
     const [prevWord, setPrevWord] = useState("");
@@ -8949,32 +9025,32 @@
     const [isFirst, setIsFirst] = useState(true);
     const [pokemonBarks, setPokemonBarks] = useState([]);
     const changeAbnormalWord = (word) => {
-      word.replace("\u30A1", "\u30A2");
-      word.replace("\u30A3", "\u30A4");
-      word.replace("\u30A5", "\u30A6");
-      word.replace("\u30A7", "\u30A8");
-      word.replace("\u30A9", "\u30AA");
-      word.replace("\u30C3", "\u30C4");
-      word.replace("\u30E3", "\u30E4");
-      word.replace("\u30E5", "\u30E6");
-      word.replace("\u30E7", "\u30E8");
-      word.replace("\u30FC", "");
-      word.replace("Z", "\u30BC\u30C3\u30C8");
-      word.replace("Y", "\u30EF\u30A4");
-      word.replace("X", "\u30A8\u30C3\u30AF\u30B9");
-      word.replace("\u2642", "\u30AA\u30B9");
-      word.replace("\u2640", "\u30E1\u30B9");
-      return word;
+      const A4 = word.replace("\u30A1", "\u30A2");
+      const B4 = A4.replace("\u30A3", "\u30A4");
+      const C2 = B4.replace("\u30A5", "\u30A6");
+      const D3 = C2.replace("\u30A7", "\u30A8");
+      const E3 = D3.replace("\u30A9", "\u30AA");
+      const F4 = E3.replace("\u30C3", "\u30C4");
+      const G4 = F4.replace("\u30E3", "\u30E4");
+      const H4 = G4.replace("\u30E5", "\u30E6");
+      const I4 = H4.replace("\u30E7", "\u30E8");
+      const J2 = I4.replace("\u30FC", "");
+      const K2 = J2.replace("Z", "\u30BC\u30C3\u30C8");
+      const L2 = K2.replace("Y", "\u30EF\u30A4");
+      const M3 = L2.replace("X", "\u30A8\u30C3\u30AF\u30B9");
+      const N3 = M3.replace("\u2642", "\u30AA\u30B9");
+      const O2 = N3.replace("\u2640", "\u30E1\u30B9");
+      return O2;
     };
     const firstReqData = async () => {
-      const data = await fetch("/firstData");
+      const data = await fetch("http://localhost:8000/firstData");
       const firstWord = await data.json();
       setPrevWord(firstWord.name);
-      console.log(firstWord.no);
       setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
     };
     const reqData = async (word) => {
-      const response = await fetch("/word", {
+      console.log("in reqData");
+      const response = await fetch("http://localhost:8000/word", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ sendText })
@@ -8995,16 +9071,26 @@
       return str.replace(/[\u3041-\u3096]/g, (ch2) => String.fromCharCode(ch2.charCodeAt(0) + 96));
     };
     const usersGameEnd = (usersword) => {
+      console.log("usersGameEnd in kansuu");
+      console.log(changeAbnormalWord(prevWord));
       if (prevWord === "") {
         return false;
-      } else if (changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !== changeAbnormalWord(usersword)[0] || changeAbnormalWord(usersword)[changeAbnormalWord(usersword).length - 1] === "\u30F3") {
+      } else if (changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !== usersword[0] || changeAbnormalWord(usersword)[changeAbnormalWord(usersword).length - 1] === "\u30F3") {
+        console.log("in if true");
         alert("\u3084\u3063\u306F\u308D\u30FC");
         return true;
       } else {
+        console.log("in if false");
         return false;
       }
     };
     const checkGameEnd = (word) => {
+      wordList.map((items) => {
+        if (items.Word === word) {
+          alert("\u540C\u3058\u5358\u8A9E\u304C\u4E8C\u56DE\u51FA\u305F\u306E\u3067\u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC\u306E\u8CA0\u3051\u3067\u3059");
+          return true;
+        }
+      });
       if (changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "\u30F3") {
         return true;
       } else {
@@ -9012,6 +9098,7 @@
       }
     };
     const wordCheck = (word) => {
+      console.log("wordCheck");
       wordList.map((items) => {
         if (items.Word === word) {
           alert("\u65E2\u306B\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059");
@@ -9019,7 +9106,9 @@
         }
       });
       if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
+        console.log("word.mathch in if");
         if (!usersGameEnd(word)) {
+          console.log("usersGameEnd in if");
           reqData(word);
         }
       } else {
@@ -9032,32 +9121,35 @@
       setWordList([]);
       setIsFirst(true);
     };
-    return /* @__PURE__ */ react_default.createElement(All, null, (() => {
-      if (isFirst) {
-        return /* @__PURE__ */ react_default.createElement("div", null, /* @__PURE__ */ react_default.createElement(FirstButton, {
-          onClick: () => {
-            firstReqData();
-          }
-        }, "\u6700\u521D\u306E\u5358\u8A9E\u3092\u6C7A\u3081\u308B\u30DC\u30BF\u30F3\u7684\u306A"), /* @__PURE__ */ react_default.createElement("p", null, "\u6700\u521D\u306E\u5358\u8A9E:", prevWord));
-      } else {
-        return /* @__PURE__ */ react_default.createElement("p", null, "\u524D\u306E\u5358\u8A9E:", prevWord);
-      }
-    })(), /* @__PURE__ */ react_default.createElement(WordInput, {
+    return /* @__PURE__ */ react_default.createElement(AllDiv, null, /* @__PURE__ */ react_default.createElement(ItemsDiv, null, /* @__PURE__ */ react_default.createElement(TitleH1, null, "\u30DD\u30B1\u30E2\u30F3\u3057\u308A\u3068\u308A"), /* @__PURE__ */ react_default.createElement(WordSendDiv, null, /* @__PURE__ */ react_default.createElement(WordInput, {
       value: sendText,
       onChange: (event) => setSendText(hiraToKana(event.target.value))
     }), /* @__PURE__ */ react_default.createElement(WordSendButton, {
       onClick: () => {
         setIsFirst(false);
-        setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
+        setWordList((prev) => [
+          ...prev,
+          { Word: sendText, isUser: true }
+        ]);
         wordCheck(sendText);
       }
-    }, "\u9001\u4FE1"), /* @__PURE__ */ react_default.createElement(HistoryP, null, "\u5C65\u6B74"), /* @__PURE__ */ react_default.createElement(HistoriesDiv, null, wordList.map((items) => {
-      return /* @__PURE__ */ react_default.createElement(react_default.Fragment, null, /* @__PURE__ */ react_default.createElement(PrevUserP, null, items.isUser ? "\u30D7\u30EC\u30A4\u30E4\u30FC" : "\u30B5\u30FC\u30D0\u30FC"), /* @__PURE__ */ react_default.createElement(PrevWordP, null, items.Word));
-    })), /* @__PURE__ */ react_default.createElement(ResetButton, {
+    }, "\u9001\u4FE1")), (() => {
+      if (isFirst) {
+        return /* @__PURE__ */ react_default.createElement(PrevDiv, null, "\u6700\u521D\u306E\u5358\u8A9E:", prevWord);
+      } else {
+        return /* @__PURE__ */ react_default.createElement(PrevDiv, null, "\u524D\u306E\u5358\u8A9E:", prevWord);
+      }
+    })(), /* @__PURE__ */ react_default.createElement(Buttons, null, /* @__PURE__ */ react_default.createElement(FirstButton, {
+      onClick: () => {
+        firstReqData();
+      }
+    }, "\u6700\u521D\u306E\u5358\u8A9E"), /* @__PURE__ */ react_default.createElement(ResetButton, {
       onClick: () => {
         reset();
       }
-    }, "\u30EA\u30BB\u30C3\u30C8"));
+    }, "\u30EA\u30BB\u30C3\u30C8")), /* @__PURE__ */ react_default.createElement(HistoriesDiv, null, wordList.map((items, index2) => {
+      return /* @__PURE__ */ react_default.createElement(FlexHistoryDiv, null, /* @__PURE__ */ react_default.createElement(IndexDiv, null, index2 + 1), /* @__PURE__ */ react_default.createElement(PrevUserDiv, null, items.isUser ? "\u30D7\u30EC\u30A4\u30E4\u30FC" : "\u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC"), /* @__PURE__ */ react_default.createElement(PrevWordDiv, null, items.Word));
+    }))));
   }
   function main() {
     react_dom_default.render(/* @__PURE__ */ react_default.createElement(App, null), document.querySelector("#main"));
