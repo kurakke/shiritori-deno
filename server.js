@@ -75,13 +75,9 @@ serve(async (req) => {
     const reqData = await req.json();
     console.log("yahharo-");
     const changedWord = changeAbnormalWord(reqData.sendText);
-    console.log(
-      getAvalablePokemons(changedWord[changedWord.length - 1])
-    );
+    console.log(getAvalablePokemons(changedWord[changedWord.length - 1]));
     return new Response(
-      JSON.stringify(
-        getAvalablePokemons(changedWord[changedWord.length - 1])
-      ),
+      JSON.stringify(getAvalablePokemons(changedWord[changedWord.length - 1])),
       {
         headers: {
           "content-type": "application/json",

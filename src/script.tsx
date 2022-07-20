@@ -276,7 +276,7 @@ function App() {
             return (
               <FlexHistoryDiv>
                 <IndexDiv>{index + 1}</IndexDiv>
-                <PrevUserDiv>{items.isUser ? "プレイヤー" : "コンピューター"}</PrevUserDiv>
+                <PrevUserDiv>{items.isUser ? "プレイヤー" : "COM"}</PrevUserDiv>
                 <PrevWordDiv>{items.Word}</PrevWordDiv>
               </FlexHistoryDiv>
             );
