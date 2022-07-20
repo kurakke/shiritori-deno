@@ -83,24 +83,22 @@ function App() {
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
   const changeAbnormalWord = (word: string) => {
-    const first = word.replace("2", "ツー");
-    const smallA = first.replace("ァ", "ア");
-    const smallI = smallA.replace("ィ", "イ");
-    const smallU = smallI.replace("ゥ", "ウ");
-    const smallE = smallU.replace("ェ", "エ");
-    const smallO = smallE.replace("ォ", "オ");
-    const smallTu = smallO.replace("ッ", "ツ");
-    const smallYa = smallTu.replace("ャ", "ヤ");
-    const smallYu = smallYa.replace("ュ", "ユ");
-    const smallYo = smallYu.replace("ョ", "ヨ");
-    const hihun = smallYo.replace("ー", "");
-    const strZ = hihun.replace("Z", "ゼット");
-    const strY = strZ.replace("Y", "ワイ");
-    const strX = strY.replace("X", "エックス");
-    const male = strX.replace("♂", "オス");
-    const female = male.replace("♀", "メス");
-    const nextHihun = female.replace("ー", "");
-    return nextHihun;
+    const A = word.replace("ァ", "ア");
+    const B = A.replace("ィ", "イ");
+    const C = B.replace("ゥ", "ウ");
+    const D = C.replace("ェ", "エ");
+    const E = D.replace("ォ", "オ");
+    const F = E.replace("ッ", "ツ");
+    const G = F.replace("ャ", "ヤ");
+    const H = G.replace("ュ", "ユ");
+    const I = H.replace("ョ", "ヨ");
+    const J = I.replace("ー", "");
+    const K = J.replace("Z", "ゼット");
+    const L = K.replace("Y", "ワイ");
+    const M = L.replace("X", "エックス");
+    const N = M.replace("♂", "オス");
+    const O = N.replace("♀", "メス");
+    return O;
   };
   const firstReqData = async () => {
     const data = await fetch("http://localhost:8000/firstData");
@@ -111,28 +109,34 @@ function App() {
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
+  const reqData = async (word: string) => {
+    console.log("in reqData");
+
+    const response = await fetch("http://localhost:8000/word", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ sendText }),
+    });
+    if (response.status / 100 !== 2) {
+      alert(await response.text());
+      return;
+    }
+    const previousWord = await response.text();
+    const sentData =
+      JSON.parse(previousWord)[
+        Math.floor(Math.random() * JSON.parse(previousWord).length)
+      ];
+    setWordList((prev) => [...prev, { Word: sentData.name, isUser: false }]);
+    if (checkGameEnd(sentData.name)) {
+      alert("ゲーム終了");
+    }
+    setPrevWord(sentData.name);
+  };
+
   const hiraToKana = (str: string): string => {
     return str.replace(/[\u3041-\u3096]/g, (ch) =>
       String.fromCharCode(ch.charCodeAt(0) + 0x60)
     );
-  };
-
-  const checkServerGameEnd = (word: string) => {
-    if (
-      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
-    ) {
-      return true;
-    } else if (word === null) {
-      return true;
-    } else if (
-      wordList
-        .map((item) => {
-          return item.Word;
-        })
-        .includes(word)
-    ) {
-      return true;
-    }
   };
   const usersGameEnd = (usersword: string) => {
     console.log("usersGameEnd in kansuu");
@@ -156,30 +160,20 @@ function App() {
       return false;
     }
   };
-  const reqData = async (word: string) => {
-    console.log("in reqData");
-
-    const response = await fetch("http://localhost:8000/word", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ sendText }),
-    });
-    if (response.status / 100 !== 2) {
-      alert(await response.text());
-      return;
+  const checkGameEnd = (word: string) => {
+    if (
+      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
+    ) {
+      return true;
+    } else {
+      false;
     }
-    const previousWord = await response.text();
-    const sentData =
-      JSON.parse(previousWord)[
-        Math.floor(Math.random() * JSON.parse(previousWord).length)
-      ];
-    setWordList((prev) => [...prev, { Word: sentData.name, isUser: false }]);
-    if (checkServerGameEnd(sentData.name)) {
-      alert("ゲーム終了");
-    }
-    setPrevWord(sentData.name);
+    // if (word[word.length - 1] === "ン") {
+    //   return true;
+    // } else {
+    //   false;
+    // }
   };
-
   const wordCheck = (word: string) => {
     console.log("wordCheck");
 
@@ -210,6 +204,13 @@ function App() {
   return (
     <AllDiv>
       <TitleH1>ポケモンしりとり</TitleH1>
+      {/* <button
+        onClick={() => {
+          firstReqData();
+        }}
+      >
+        最初の文字決めるボタン的な
+      </button> */}
       {(() => {
         if (isFirst) {
           return <PrevP>最初の単語:{prevWord}</PrevP>;
@@ -217,6 +218,7 @@ function App() {
           return <PrevP>前の単語:{prevWord}</PrevP>;
         }
       })()}
+
       <WordSendDiv>
         <WordInput
           value={sendText}
@@ -226,7 +228,9 @@ function App() {
           onClick={() => {
             setIsFirst(false);
             setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
-
+            // if (!usersGameEnd(sendText)) {
+            //   wordCheck(sendText);
+            // }
             wordCheck(sendText);
           }}
         >
@@ -249,7 +253,7 @@ function App() {
           リセット
         </ResetButton>
       </Buttons>
-
+      {/* <HistoryP>履歴</HistoryP> */}
       <HistoriesDiv>
         {wordList.map((items) => {
           return (
