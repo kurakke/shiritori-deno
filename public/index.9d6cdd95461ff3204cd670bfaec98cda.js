@@ -9043,14 +9043,13 @@
       return O2;
     };
     const firstReqData = async () => {
-      const data = await fetch("http://localhost:8000/firstData");
+      const data = await fetch("/firstData");
       const firstWord = await data.json();
       setPrevWord(firstWord.name);
       setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
     };
-    const reqData = async (word) => {
-      console.log("in reqData");
-      const response = await fetch("http://localhost:8000/word", {
+    const reqData = async () => {
+      const response = await fetch("/word", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ sendText })
@@ -9071,16 +9070,12 @@
       return str.replace(/[\u3041-\u3096]/g, (ch2) => String.fromCharCode(ch2.charCodeAt(0) + 96));
     };
     const usersGameEnd = (usersword) => {
-      console.log("usersGameEnd in kansuu");
-      console.log(changeAbnormalWord(prevWord));
       if (prevWord === "") {
         return false;
       } else if (changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !== usersword[0] || changeAbnormalWord(usersword)[changeAbnormalWord(usersword).length - 1] === "\u30F3") {
-        console.log("in if true");
         alert("\u3084\u3063\u306F\u308D\u30FC");
         return true;
       } else {
-        console.log("in if false");
         return false;
       }
     };
@@ -9098,7 +9093,6 @@
       }
     };
     const wordCheck = (word) => {
-      console.log("wordCheck");
       wordList.map((items) => {
         if (items.Word === word) {
           alert("\u65E2\u306B\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059");
@@ -9106,10 +9100,8 @@
         }
       });
       if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
-        console.log("word.mathch in if");
         if (!usersGameEnd(word)) {
-          console.log("usersGameEnd in if");
-          reqData(word);
+          reqData();
         }
       } else {
         alert("\u5165\u529B\u306F\u30AB\u30BF\u30AB\u30CA\u3067\u3059");
