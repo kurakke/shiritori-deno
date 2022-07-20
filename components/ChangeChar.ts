@@ -1,0 +1,21 @@
+const ChangeChar = (word: string) => {
+  const first = word.replace("2", "ツー");
+  const smallA = first.replace("ァ", "ア");
+  const smallI = smallA.replace("ィ", "イ");
+  const smallU = smallI.replace("ゥ", "ウ");
+  const smallE = smallU.replace("ェ", "エ");
+  const smallO = smallE.replace("ォ", "オ");
+  const smallTu = smallO.replace("ッ", "ツ");
+  const smallYa = smallTu.replace("ャ", "ヤ");
+  const smallYu = smallYa.replace("ュ", "ユ");
+  const smallYo = smallYu.replace("ョ", "ヨ");
+  const hihun = smallYo.replace("ー", "");
+  const strZ = hihun.replace("Z", "ゼット");
+  const strY = strZ.replace("Y", "ワイ");
+  const strX = strY.replace("X", "エックス");
+  const male = strX.replace("♂", "オス");
+  const female = male.replace("♀", "メス");
+  const nextHihun = female.replace("ー", "");
+  return nextHihun;
+};
+export default ChangeChar;

@@ -4,7 +4,7 @@ import useStateEffect from "https://cdn.skypack.dev/use-state-effect";
 import styled, {
   createGlobalStyle,
 } from "https://cdn.skypack.dev/styled-components@5.3.3?dts";
-import { pokemons } from "../pokemon.tsx";
+import { pokemons } from "../components/pokemon.tsx";
 
 const AllDiv = styled.div`
   min-height: 100vh;
@@ -83,22 +83,6 @@ function App() {
   const [pokemonBarks, setPokemonBarks] = useState<HTMLAudioElement[]>([]);
 
   const changeAbnormalWord = (word: string) => {
-    // const [changeWord, setChangeWord] = useState<string>(word);
-    // setChangeWord((prev) => prev.replace("ァ", "ア"));
-    // setChangeWord((prev) => prev.replace("ィ", "イ"));
-    // setChangeWord((prev) => prev.replace("ゥ", "ウ"));
-    // setChangeWord((prev) => prev.replace("ェ", "エ"));
-    // setChangeWord((prev) => prev.replace("ォ", "オ"));
-    // setChangeWord((prev) => prev.replace("ャ", "ヤ"));
-    // setChangeWord((prev) => prev.replace("ュ", "ユ"));
-    // setChangeWord((prev) => prev.replace("ョ", "ヨ"));
-    // setChangeWord((prev) => prev.replace("ッ", "ツ"));
-    // setChangeWord((prev) => prev.replace("ー", ""));
-    // setChangeWord((prev) => prev.replace("Z", "ゼット"));
-    // setChangeWord((prev) => prev.replace("X", "エックス"));
-    // setChangeWord((prev) => prev.replace("Y", "ワイ"));
-    // setChangeWord((prev) => prev.replace("♂", "オス"));
-    // setChangeWord((prev) => prev.replace("♀", "メス"));
     const first = word.replace("2", "ツー");
     const smallA = first.replace("ァ", "ア");
     const smallI = smallA.replace("ィ", "イ");
@@ -127,6 +111,51 @@ function App() {
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
+  const hiraToKana = (str: string): string => {
+    return str.replace(/[\u3041-\u3096]/g, (ch) =>
+      String.fromCharCode(ch.charCodeAt(0) + 0x60)
+    );
+  };
+
+  const checkServerGameEnd = (word: string) => {
+    if (
+      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
+    ) {
+      return true;
+    } else if (word === null) {
+      return true;
+    } else if (
+      wordList
+        .map((item) => {
+          return item.Word;
+        })
+        .includes(word)
+    ) {
+      return true;
+    }
+  };
+  const usersGameEnd = (usersword: string) => {
+    console.log("usersGameEnd in kansuu");
+    console.log(changeAbnormalWord(prevWord));
+
+    if (prevWord === "") {
+      return false;
+    } else if (
+      changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
+        usersword[0] ||
+      changeAbnormalWord(usersword)[
+        changeAbnormalWord(usersword).length - 1
+      ] === "ン"
+    ) {
+      console.log("in if true");
+      alert("やっはろー");
+      return true;
+    } else {
+      console.log("in if false");
+
+      return false;
+    }
+  };
   const reqData = async (word: string) => {
     console.log("in reqData");
 
@@ -151,56 +180,6 @@ function App() {
     setPrevWord(sentData.name);
   };
 
-  const hiraToKana = (str: string): string => {
-    return str.replace(/[\u3041-\u3096]/g, (ch) =>
-      String.fromCharCode(ch.charCodeAt(0) + 0x60)
-    );
-  };
-  const usersGameEnd = (usersword: string) => {
-    console.log("usersGameEnd in kansuu");
-    console.log(changeAbnormalWord(prevWord));
-
-    if (prevWord === "") {
-      return false;
-    } else if (
-      changeAbnormalWord(prevWord)[changeAbnormalWord(prevWord).length - 1] !==
-        usersword[0] ||
-      changeAbnormalWord(usersword)[
-        changeAbnormalWord(usersword).length - 1
-      ] === "ン"
-    ) {
-      console.log("in if true");
-      alert("やっはろー");
-      return true;
-    } else {
-      console.log("in if false");
-
-      return false;
-    }
-  };
-  const checkServerGameEnd = (word: string) => {
-    if (
-      changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
-    ) {
-      return true;
-    } else if (word === null) {
-      return true;
-    } else if (
-      wordList
-        .map((item) => {
-          return item.Word;
-        })
-        .includes(word)
-    ) {
-      return true;
-    }
-
-    // if (word[word.length - 1] === "ン") {
-    //   return true;
-    // } else {
-    //   false;
-    // }
-  };
   const wordCheck = (word: string) => {
     console.log("wordCheck");
 
@@ -231,13 +210,6 @@ function App() {
   return (
     <AllDiv>
       <TitleH1>ポケモンしりとり</TitleH1>
-      {/* <button
-        onClick={() => {
-          firstReqData();
-        }}
-      >
-        最初の文字決めるボタン的な
-      </button> */}
       {(() => {
         if (isFirst) {
           return <PrevP>最初の単語:{prevWord}</PrevP>;
@@ -245,7 +217,6 @@ function App() {
           return <PrevP>前の単語:{prevWord}</PrevP>;
         }
       })()}
-
       <WordSendDiv>
         <WordInput
           value={sendText}
@@ -255,9 +226,7 @@ function App() {
           onClick={() => {
             setIsFirst(false);
             setWordList((prev) => [...prev, { Word: sendText, isUser: true }]);
-            // if (!usersGameEnd(sendText)) {
-            //   wordCheck(sendText);
-            // }
+
             wordCheck(sendText);
           }}
         >
@@ -280,7 +249,7 @@ function App() {
           リセット
         </ResetButton>
       </Buttons>
-      {/* <HistoryP>履歴</HistoryP> */}
+
       <HistoriesDiv>
         {wordList.map((items) => {
           return (
