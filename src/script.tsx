@@ -50,7 +50,6 @@ const PrevDiv = styled.div`
 const Buttons = styled.div`
   padding: 20px;
   display: flex;
-  // justify-content: flex-end;
 `;
 const ResetButton = styled.button``;
 const FirstButton = styled.button``;
@@ -184,6 +183,12 @@ function App() {
     }
   };
   const checkGameEnd = (word: string) => {
+    wordList.map((items) => {
+      if (items.Word === word) {
+        alert("同じ単語が二回出たのでコンピューターの負けです");
+        return true;
+      }
+    });
     if (
       changeAbnormalWord(word)[changeAbnormalWord(word).length - 1] === "ン"
     ) {
@@ -271,9 +276,7 @@ function App() {
             return (
               <FlexHistoryDiv>
                 <IndexDiv>{index + 1}</IndexDiv>
-                <PrevUserDiv>
-                  {items.isUser ? "プレイヤー" : "サーバー"}
-                </PrevUserDiv>
+                <PrevUserDiv>{items.isUser ? "プレイヤー" : "コンピューター"}</PrevUserDiv>
                 <PrevWordDiv>{items.Word}</PrevWordDiv>
               </FlexHistoryDiv>
             );
