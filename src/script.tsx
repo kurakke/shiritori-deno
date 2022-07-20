@@ -59,7 +59,9 @@ function App() {
     setWordList((prev) => [...prev, { Word: firstWord.name, isUser: false }]);
   };
 
-  const reqData = async (word: string) => {
+
+  const reqData = async () => {
+
     const response = await fetch("/word", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -100,7 +102,9 @@ function App() {
         changeAbnormalWord(usersword).length - 1
       ] === "ン"
     ) {
+
       alert("んが末尾についたら負けです");
+
       return true;
     } else {
       return false;
@@ -131,7 +135,9 @@ function App() {
     });
     if (word.match(/[\u30a0-\u30ff\u3040-\u309f]/)) {
       if (!usersGameEnd(word)) {
-        reqData(word);
+
+        reqData();
+
       }
     } else {
       alert("入力はカタカナです");
@@ -195,7 +201,9 @@ function App() {
             return (
               <FlexHistoryDiv>
                 <IndexDiv>{index + 1}</IndexDiv>
+
                 <PrevUserDiv>{items.isUser ? "プレイヤー" : "COM"}</PrevUserDiv>
+
                 <PrevWordDiv>{items.Word}</PrevWordDiv>
               </FlexHistoryDiv>
             );
